@@ -3,6 +3,9 @@
 
 """ Module that contains the initialization variables for the game Help MacGyver to Escape ! """
 
+import pygame
+from pygame.locals import *
+
 # Window settings
 nb_sprite = 15
 sprite_size = 40
@@ -16,3 +19,6 @@ picture_start = "images/sol.png"
 picture_goal = "images/depart.png"
 picture_hero = "images/MacGyver.png"
 picture_guard = "images/Gardien.png"
+picture_needle = "images/aiguille.png"
+picture_ether = "images/ether.png"
+picture_plastic = "images/tube_plastique.png"
