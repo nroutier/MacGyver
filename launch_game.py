@@ -20,11 +20,34 @@ def main():
     labyrinth.display_lab(window)
     pygame.display.flip()
 
+    hero = Char("hero", labyrinth, window)
+    hero.display_char()
+
+    guard = Char("guard", labyrinth, window)
+    guard.display_char()
+
+    pygame.display.flip()
+
     running = 1
     while running:
         for event in pygame.event.get():
             if event.type == QUIT:
                 running = 0
+            elif event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    running = 0
+                elif event.key == K_RIGHT:
+                    hero.move("right")
+                elif event.key == K_LEFT:
+                    hero.move("left")
+                elif event.key == K_UP:
+                    hero.move("up")
+                elif event.key == K_DOWN:
+                    hero.move("down")
+        labyrinth.display_lab(window)
+        hero.display_char()
+        guard.display_char()
+        pygame.display.flip()
 
 if __name__ == "__main__":
     main()
