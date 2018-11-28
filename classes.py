@@ -62,7 +62,7 @@ class Char:
 		self.pos_x = pos_x
 		self.pos_y = pos_y
 		self.life = 100
-		self.objects = [1,2]
+		self.objects = []
 		self.direction = "right"
 		self.window = window
 

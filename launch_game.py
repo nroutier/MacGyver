@@ -9,7 +9,13 @@ from pygame.locals import *
 
 from init import *
 from classes import *
-from functions import *
+
+def load_img(img):
+    """ function that load and scale an image with Pygame """
+
+    name = pygame.image.load(img).convert_alpha()
+    name = pygame.transform.scale(name, (sprite_size, sprite_size))
+    return name
 
 def main():
     pygame.init()
@@ -72,29 +78,48 @@ def main():
     pygame.display.flip()
 
     # Event loop
-    running = 1
-    while running:
+    loop = 1
+    while loop:
         for event in pygame.event.get():
             if event.type == QUIT:
-                running = 0
+                loop = 0
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
-                    running = 0
+                    loop = 0
                 elif event.key == K_RIGHT:
                     hero.move("right")
-                    needle.position = (0, 14*sprite_size)
                 elif event.key == K_LEFT:
                     hero.move("left")
                 elif event.key == K_UP:
                     hero.move("up")
                 elif event.key == K_DOWN:
                     hero.move("down")
+        
         labyrinth.display_lab(window)
-        hero.display_char()
-        guard.display_char()
-        needle.display_obj()
-        ether.display_obj()
-        plastic.display_obj()
+        if hero.life != 0:
+            hero.display_char()
+        else: loop = 0
+        if hero.position_char() == guard.position_char():
+            if plastic in hero.objects and needle in hero.objects and ether in hero.objects:
+                guard.life = 0
+                print("You killed the guard")
+            else:
+                hero.life = 0
+                print("The guard killed you")
+        elif guard.life != 0:
+            guard.display_char()
+        if needle not in hero.objects:
+            needle.display_obj()
+        if hero.position_char() == needle.position:
+            hero.objects.append(needle)
+        if ether not in hero.objects:
+            ether.display_obj()
+        if hero.position_char() == ether.position:
+            hero.objects.append(ether)
+        if plastic not in hero.objects:
+            plastic.display_obj()
+        if hero.position_char() == plastic.position:
+            hero.objects.append(plastic)
         pygame.display.flip()
 
 if __name__ == "__main__":
