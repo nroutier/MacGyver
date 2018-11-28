@@ -12,12 +12,13 @@ from init import *
 class Labyrinth:
 	""" Class that create the structure of the boardgame form a file and allows to display with pygame """
 
-	def __init__(self, file, wall_img, floor_img, goal_img):
+	def __init__(self, file, wall_img, floor_img, goal_img, bg_img):
 		""" Method that initialize a Labyrinth object """
 		self.file = file
 		self.wall_img = wall_img
 		self.floor_img = floor_img
 		self.goal_img = goal_img
+		self.bg_img = bg_img
 		self.structure = []
 
 	def generate(self):
@@ -49,6 +50,8 @@ class Labyrinth:
 					window.blit(self.floor_img, (x,y))
 				elif sprite == "a":
 					window.blit(self.goal_img, (x,y))
+				elif sprite == "b":
+					window.blit(self.bg_img, (x,y))
 				n_sprite += 1
 			n_row += 1
 
@@ -79,16 +82,16 @@ class Char:
 	def move(self, direction):
 		""" Method that move the position of a char """
 		if direction == "right":
-			if ((self.pos_x < nb_sprite - 1) and (self.labyrinth.structure[self.pos_y][self.pos_x + 1] != "w")):
+			if ((self.pos_x < nb_sprite - 1) and (self.labyrinth.structure[self.pos_y][self.pos_x + 1] != "w" and self.labyrinth.structure[self.pos_y][self.pos_x + 1] != "b")):
 				self.pos_x += 1
 		elif direction == "left":
-			if ((self.pos_x > 0) and (self.labyrinth.structure[self.pos_y][self.pos_x -1] != "w")):
+			if ((self.pos_x > 1) and (self.labyrinth.structure[self.pos_y][self.pos_x -1] != "w" and self.labyrinth.structure[self.pos_y][self.pos_x -1] != "b")):
 				self.pos_x -= 1
 		elif direction == "up":
-			if ((self.pos_y > 0) and (self.labyrinth.structure[self.pos_y - 1][self.pos_x] != "w")):
+			if ((self.pos_y > 1) and (self.labyrinth.structure[self.pos_y - 1][self.pos_x] != "w" and self.labyrinth.structure[self.pos_y - 1][self.pos_x] != "b")):
 				self.pos_y -= 1
 		elif direction == "down":
-			if ((self.pos_y < nb_sprite - 1) and (self.labyrinth.structure[self.pos_y + 1][self.pos_x] != "w")):
+			if ((self.pos_y < nb_sprite - 1) and (self.labyrinth.structure[self.pos_y + 1][self.pos_x] != "w" and self.labyrinth.structure[self.pos_y + 1][self.pos_x] != "b")):
 				self.pos_y += 1
 
 class Objs:
