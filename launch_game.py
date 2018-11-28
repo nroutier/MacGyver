@@ -10,12 +10,30 @@ from pygame.locals import *
 from init import *
 from classes import *
 
+# Funtions
+def get_strucpos(struc, char):
+    """ function to return an array with the coord(s) of the matching provided character in the structure"""
+    strucpos = []
+    n_row = 0
+    for row in struc:
+        n_sprite = 0
+        for sprite in row:
+            x = n_sprite * sprite_size
+            y = n_row * sprite_size
+            if sprite == char:
+                strucpos.append((x,y))
+            n_sprite += 1
+        n_row += 1
+    return strucpos
+
 def load_img(img, ratio):
     """ function that load and scale an image with Pygame """
 
     name = pygame.image.load(img).convert_alpha()
     name = pygame.transform.scale(name, (ratio, ratio))
     return name
+
+# Main
 
 def main():
     pygame.init()
@@ -38,6 +56,8 @@ def main():
     seringe_img = load_img(picture_seringe, sprite_size)
     life100_img = load_img(picture_life100, int(sprite_size/1.5))
     life0_img = load_img(picture_life0, int(sprite_size/1.5))
+    gameover_img = load_img(picture_gameover, 15 * sprite_size)
+    finish_img = load_img(picture_finish, 15 * sprite_size)
 
     # Creating labyrinth
     labyrinth = Labyrinth("level.txt", wall_img, floor_img, goal_img, bg_img)
@@ -48,30 +68,20 @@ def main():
     guard = Char("guard", guard_img, labyrinth, window, 14, 1)
 
     # get available position in structure
-    available_pos = []
-    n_row = 0
-    for row in labyrinth.structure:
-        n_sprite = 0
-        for sprite in row:
-            x = n_sprite * sprite_size
-            y = n_row * sprite_size
-            if ((sprite == "e") and ((x, y) != hero.position_char()) and ((x,y) != guard.position_char())):
-                available_pos.append((x, y))
-            n_sprite += 1
-        n_row += 1
+    available_pos = get_strucpos(labyrinth.structure, "e")
+    available_pos.remove(guard.position_char())
 
     # get 3 random position for objs
-    random_pos1 = random.choice(available_pos)
-    available_pos.remove(random_pos1)
-    random_pos2 = random.choice(available_pos)
-    available_pos.remove(random_pos2)
-    random_pos3 = random.choice(available_pos)
-    available_pos.remove(random_pos3)
+    needle_pos = random.choice(available_pos)
+    available_pos.remove(needle_pos)
+    ether_pos = random.choice(available_pos)
+    available_pos.remove(ether_pos)
+    plastic_pos = random.choice(available_pos)
 
     # Creating Objects
-    needle = Objs("needle", needle_img, random_pos1, window)
-    ether = Objs("ether", ether_img, random_pos2, window)
-    plastic = Objs("plastic", plastic_img, random_pos3, window)
+    needle = Objs("needle", needle_img, needle_pos, window)
+    ether = Objs("ether", ether_img, ether_pos, window)
+    plastic = Objs("plastic", plastic_img, plastic_pos, window)
 
     # Display game
     labyrinth.display_lab(window)
@@ -108,14 +118,17 @@ def main():
         labyrinth.display_lab(window)
         window.blit(hero2_img, (0,0))
         window.blit(guard2_img, (3 * sprite_size,0))
+
         if plastic in hero.objects and needle in hero.objects and ether in hero.objects:
             window.blit(seringe_img, (0, 2 * sprite_size))
+            if hero.position_char() == get_strucpos(labyrinth.structure, "a")[0]:
+                window.blit(finish_img, (1 * sprite_size, 1 * sprite_size))
         if hero.life != 0:
             hero.display_char()
             window.blit(life100_img, (1 * sprite_size, 0))
         else: 
             window.blit(life0_img, (1 * sprite_size, 0))
-            # loop = 0
+            window.blit(gameover_img, (1 * sprite_size, 1 * sprite_size))
         if guard.life != 0:
             guard.display_char()
             window.blit(life100_img, (4 * sprite_size, 0))
@@ -124,11 +137,8 @@ def main():
         if hero.position_char() == guard.position_char():
             if plastic in hero.objects and needle in hero.objects and ether in hero.objects:
                 guard.life = 0
-                print("You killed the guard")
             else:
-                hero.life = 0
-                print("The guard killed you")
-        
+                hero.life = 0 
         if hero.position_char() == needle.position:
             hero.objects.append(needle)
         if needle in hero.objects:
