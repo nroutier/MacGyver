@@ -55,6 +55,24 @@ class Labyrinth:
 				n_sprite += 1
 			n_row += 1
 
+	def get_strucpos(self, char):
+		""" Method to return the coord(s) of the matching character in the structure """
+		strucpos = []
+		n_row = 0
+		for row in self.structure:
+			n_sprite = 0
+			for sprite in row:
+				x = n_sprite * sprite_size
+				y = n_row * sprite_size
+				if sprite == char:
+					strucpos.append((x,y))
+				n_sprite += 1
+			n_row += 1
+		if len(strucpos) == 1:
+			return strucpos[0]
+		else:
+			 return strucpos
+
 class Char:
 	""" Class that create character for the game """
 

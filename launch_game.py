@@ -11,20 +11,6 @@ from init import *
 from classes import *
 
 # Funtions
-def get_strucpos(struc, char):
-    """ function to return an array with the coord(s) of the matching provided character in the structure"""
-    strucpos = []
-    n_row = 0
-    for row in struc:
-        n_sprite = 0
-        for sprite in row:
-            x = n_sprite * sprite_size
-            y = n_row * sprite_size
-            if sprite == char:
-                strucpos.append((x,y))
-            n_sprite += 1
-        n_row += 1
-    return strucpos
 
 def load_img(img, ratio):
     """ function that load and scale an image with Pygame """
@@ -68,7 +54,7 @@ def main():
     guard = Char("guard", guard_img, labyrinth, window, 14, 1)
 
     # get available position in structure
-    available_pos = get_strucpos(labyrinth.structure, "e")
+    available_pos = labyrinth.get_strucpos("e")
     available_pos.remove(guard.position_char())
 
     # get 3 random position for objs
@@ -121,7 +107,7 @@ def main():
 
         if plastic in hero.objects and needle in hero.objects and ether in hero.objects:
             window.blit(seringe_img, (0, 2 * sprite_size))
-            if hero.position_char() == get_strucpos(labyrinth.structure, "a")[0]:
+            if hero.position_char() == labyrinth.get_strucpos("a"):
                 window.blit(finish_img, (1 * sprite_size, 1 * sprite_size))
         if hero.life != 0:
             hero.display_char()
