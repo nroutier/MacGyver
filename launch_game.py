@@ -8,7 +8,10 @@ import pygame
 from pygame.locals import *
 
 from init import *
-from classes import *
+import Classes
+from Classes.Labyrinth import Labyrinth
+from Classes.Characters import Characters
+from Classes.Game_objects import Game_objects
 
 # Funtions
 
@@ -50,8 +53,8 @@ def main():
     labyrinth.generate()
 
     # Creating characters
-    hero = Char("hero", hero_img, labyrinth, window,1,15)
-    guard = Char("guard", guard_img, labyrinth, window, 14, 1)
+    hero = Characters("hero", hero_img, labyrinth, window,1,15)
+    guard = Characters("guard", guard_img, labyrinth, window, 14, 1)
 
     # get available position in structure
     available_pos = labyrinth.get_strucpos("e")
@@ -65,9 +68,9 @@ def main():
     plastic_pos = random.choice(available_pos)
 
     # Creating Objects
-    needle = Objs("needle", needle_img, needle_pos, window)
-    ether = Objs("ether", ether_img, ether_pos, window)
-    plastic = Objs("plastic", plastic_img, plastic_pos, window)
+    needle = Game_objects("needle", needle_img, needle_pos, window)
+    ether = Game_objects("ether", ether_img, ether_pos, window)
+    plastic = Game_objects("plastic", plastic_img, plastic_pos, window)
 
     # Display game
     labyrinth.display_lab(window)
